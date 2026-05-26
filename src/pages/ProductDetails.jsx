@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { getProductById } from "../fakeAPI";
+import { useCart } from "../context/CartContext";
 import {
   ProductDetailsContainer,
   ProductImage,
@@ -12,11 +13,10 @@ import {
 export const ProductDetails = () => {
   const { id } = useParams();
   const product = getProductById(id);
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    console.log(`Added ${product.name} to cart`);
-    alert(`${product.name} added to cart!`);
+    addToCart(product);
   };
 
   return (
