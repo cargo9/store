@@ -1,25 +1,41 @@
 import { useParams } from "react-router-dom";
 import { getProductById } from "../fakeAPI";
+import {
+  ProductDetailsContainer,
+  ProductImage,
+  ProductInfo,
+  ProductTitle,
+  ProductDescription,
+  AddToCartButton
+} from "./ProductDetails.styled";
 
 export const ProductDetails = () => {
   const { id } = useParams();
   const product = getProductById(id);
+
+  const handleAddToCart = () => {
+    // TODO: Implement cart functionality
+    console.log(`Added ${product.name} to cart`);
+    alert(`${product.name} added to cart!`);
+  };
+
   return (
-    <main>
-      <img src="https://via.placeholder.com/960x240" alt="" />
-      <div>
-        <h2>
-          Product - {product.name} - {id}
-        </h2>
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus
-          sunt excepturi nesciunt iusto dignissimos assumenda ab quae cupiditate
-          a, sed reprehenderit? Deleniti optio quasi, amet natus reiciendis
-          atque fuga dolore? Lorem, ipsum dolor sit amet consectetur adipisicing
-          elit. Impedit suscipit quisquam incidunt commodi fugiat aliquam
-          praesentium ipsum quos unde voluptatum?
-        </p>
-      </div>
-    </main>
+    <ProductDetailsContainer>
+      <ProductImage src={product.image} alt={product.name} />
+      <ProductInfo>
+        <ProductTitle>
+          {product.name}
+        </ProductTitle>
+        <h3 style={{ fontSize: '1.5rem', color: '#007bff', marginBottom: '20px' }}>
+          ${product.price.toFixed(2)}
+        </h3>
+        <ProductDescription>
+          {product.description}
+        </ProductDescription>
+        <AddToCartButton onClick={handleAddToCart}>
+          Add to Cart
+        </AddToCartButton>
+      </ProductInfo>
+    </ProductDetailsContainer>
   );
 };
