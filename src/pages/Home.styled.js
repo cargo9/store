@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-// Контейнер для всей страницы
+// Page container
 export const HomeContainer = styled.div`
   padding: 20px 0;
 `;
 
-// Приветственный блок (Welcome)
+// Hero / welcome block
 export const Hero = styled.div`
   text-align: center;
   padding: 60px 20px;
@@ -27,7 +27,7 @@ export const Hero = styled.div`
   }
 `;
 
-// Заголовок "ТОП вещей"
+// Section title
 export const SectionTitle = styled.h2`
   font-size: 2rem;
   margin-bottom: 30px;
@@ -40,13 +40,13 @@ export const SectionTitle = styled.h2`
     display: block;
     width: 60px;
     height: 4px;
-    background-color: #ff4500; /* Оранжевый акцент под твой стиль */
+    background-color: #ff4500; /* orange accent */
     margin: 10px auto 0;
     border-radius: 2px;
   }
 `;
 
-// Умная сетка для товаров (как в твоем наброске, но ровная и адаптивная)
+// Responsive product grid
 export const ProductGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -54,7 +54,7 @@ export const ProductGrid = styled.div`
   padding: 10px;
 `;
 
-// Стиль самой карточки товара
+// Product card
 export const ProductCard = styled.div`
   background: #fff;
   border-radius: 8px;

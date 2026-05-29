@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { initDatabase } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
+import ordersRoutes from './routes/ordersRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/orders', ordersRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import {
   ModalOverlay,
   ModalContent,
@@ -19,9 +20,11 @@ import {
   TotalLabel,
   TotalPrice,
   EmptyCart,
+  BuyButton,
 } from "./CartModal.styled";
 
 export const CartModal = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     cartItems,
     closeCart,
@@ -30,17 +33,58 @@ export const CartModal = () => {
     removeFromCart,
     getTotalPrice,
   } = useCart();
+  const { user, isAuthenticated } = useAuth();
+
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      alert("Please login first");
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      alert("Your cart is empty");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/orders/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id || user.username,
+          username: user.username,
+          cartItems: cartItems,
+          totalPrice: getTotalPrice(),
+        }),
+      });
+
+      if (response.ok) {
+        alert("Order sent to Telegram! ✓");
+        closeCart();
+      } else {
+        const error = await response.json();
+        alert("Error: " + (error.error || "Failed to send order"));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Network error: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <ModalOverlay onClick={closeCart}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <h2>Корзина</h2>
+          <h2>Cart</h2>
           <CloseButton onClick={closeCart}>&times;</CloseButton>
         </ModalHeader>
 
         {cartItems.length === 0 ? (
-          <EmptyCart>Корзина пуста</EmptyCart>
+          <EmptyCart>Your cart is empty</EmptyCart>
         ) : (
           <>
             <CartItemsList>
@@ -68,8 +112,11 @@ export const CartModal = () => {
             </CartItemsList>
 
             <TotalSection>
-              <TotalLabel>Общая сумма:</TotalLabel>
+              <TotalLabel>Total:</TotalLabel>
               <TotalPrice>${getTotalPrice().toFixed(2)}</TotalPrice>
+              <BuyButton onClick={handleCheckout} disabled={isLoading}>
+                {isLoading ? "Sending..." : "Checkout"}
+              </BuyButton>
             </TotalSection>
           </>
         )}
