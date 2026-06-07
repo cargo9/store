@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { getProductById } from "../fakeAPI";
 import { useCart } from "../context/CartContext";
+import { BackLink } from "../components/BackLink";
 import {
   ProductDetailsContainer,
   ProductImage,
@@ -14,6 +15,8 @@ export const ProductDetails = () => {
   const { id } = useParams();
   const product = getProductById(id);
   const { addToCart } = useCart();
+  const location = useLocation();
+  const backLinkHref = location.state?.from ?? "/products";
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -21,6 +24,7 @@ export const ProductDetails = () => {
 
   return (
     <ProductDetailsContainer>
+      <BackLink to={backLinkHref}>Back to products</BackLink>
       <ProductImage src={product.image} alt={product.name} />
       <ProductInfo>
         <ProductTitle>

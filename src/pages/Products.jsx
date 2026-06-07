@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { ProductList } from "../components/ProductList";
 import { getProducts } from "../fakeAPI";
 import { useSearch } from "../context/SearchContext";
@@ -6,8 +7,12 @@ import { searchProducts } from "../utils/searchUtils";
 export const Products = () => {
   const products = getProducts();
   const { searchQuery } = useSearch();
+  const [searchParams] = useSearchParams();
 
-  const filteredProducts = searchProducts(products, searchQuery);
+  const urlSearchQuery = searchParams.get("name") ?? "";
+  const finalSearchQuery = urlSearchQuery || searchQuery;
+
+  const filteredProducts = searchProducts(products, finalSearchQuery);
 
   return (
     <main>

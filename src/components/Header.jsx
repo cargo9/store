@@ -1,4 +1,5 @@
 import React from "react";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useSearch } from "../context/SearchContext";
 import { useAuth } from "../context/AuthContext";
@@ -19,6 +20,29 @@ export const Header = () => {
   const { searchQuery, updateSearchQuery } = useSearch();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
   const totalItems = getTotalItems();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    updateSearchQuery(value);
+
+    if (value.trim()) {
+      setSearchParams({ name: value });
+      if (location.pathname !== "/products") {
+        navigate(`/products?name=${encodeURIComponent(value)}`);
+      }
+    } else {
+      setSearchParams({});
+      if (location.pathname === "/products") {
+        navigate("/products");
+      }
+    }
+  };
+
+  const urlSearchQuery = searchParams.get("name") ?? "";
+  const displayValue = urlSearchQuery || searchQuery;
 
   return (
     <StyledHeader>
@@ -42,8 +66,8 @@ export const Header = () => {
       <SearchInput
         type="text"
         placeholder="Search products..."
-        value={searchQuery}
-        onChange={(e) => updateSearchQuery(e.target.value)}
+        value={displayValue}
+        onChange={handleSearch}
       />
       <nav>
         <Link to="/" end>Home</Link>
